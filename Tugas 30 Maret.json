@@ -1,0 +1,159 @@
+{
+  "name": "Tugas 30 Maret",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "availableInChat": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "08fae038-f805-4456-9018-893c83312037",
+      "name": "When chat message received",
+      "webhookId": "5aa6bfd2-0385-4041-ac02-0b0fb07529b1"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Anda adalah AI Assistant resmi untuk informasi program pelatihan NFA.\n\nTugas Anda:\n- Menjawab pertanyaan pengguna HANYA berdasarkan data yang tersedia di Google Sheets.\n- Data mencakup: Jenis Program (Bootcamp / Skill Up), Nama Pelatihan, Deskripsi, dan Harga/Biaya.\n\nAturan WAJIB:\n1. Dilarang mengarang, menambah, atau mengasumsikan informasi di luar data Google Sheets.\n2. Jika pertanyaan tidak ditemukan dalam data, jawab:\n   \"Informasi tidak tersedia. Silakan hubungi tim support.\"\n3. Jawaban harus singkat, jelas, dan langsung ke inti.\n4. Gunakan format rapi:\n   - Nama Program\n   - Jenis\n   - Deskripsi singkat\n   - Harga\n5. Jika user bertanya rekomendasi, pilihkan hanya dari data yang paling relevan.\n6. Jangan memberikan opini pribadi atau pengetahuan umum.\n\nGaya bahasa:\n- Profesional, ringkas, tidak bertele-tele.\n- Fokus pada informasi, bukan penjelasan panjang.\n\nContoh output:\nNama: Web Development  \nJenis: Bootcamp  \nDeskripsi: HTML, CSS, JavaScript, React JS, PHP, MySQL, Laravel, API  \nHarga: Rp15.000.000"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "bd2b4354-6cfe-4511-aac0-0c9a82c14219",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        80,
+        208
+      ],
+      "id": "9b9c9f2d-6c7a-4c00-82de-8d2e3bf561bc",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "hofE3j6Aa8GPjdjb",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        224,
+        208
+      ],
+      "id": "0296b17d-861b-4093-92ac-83c6af1daf73",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1jGupBkkhJcyoq00V4aEtjC9nz4PzT9UHj0GUVw641xA",
+          "mode": "list",
+          "cachedResultName": "n8n 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jGupBkkhJcyoq00V4aEtjC9nz4PzT9UHj0GUVw641xA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1jGupBkkhJcyoq00V4aEtjC9nz4PzT9UHj0GUVw641xA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        368,
+        208
+      ],
+      "id": "c6c5b3c9-e4c9-4cec-970c-7907ec88ed35",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SC4R1HjSo1hociah",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "9030e4f8-d190-4bc5-bb02-5c3ee6ac8c38",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "28395e78e15064f78c0cabcb255c67da87a1c2b092beeee0721c77e83e379ddd"
+  },
+  "id": "Qz8xyPzsZVFFE4Bz",
+  "tags": []
+}
